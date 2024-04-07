@@ -20,7 +20,12 @@
         
         for(let prop in obj) {
             let td = document.createElement('td');
-            td.textContent = obj[prop];
+            if(prop !== 'dataCadastro') {
+                td.textContent = obj[prop];
+            } else {
+                td.setAttribute('data-timestamp', obj[prop]);
+                td.textContent = (new Date(obj[prop])).toLocaleDateString();
+            }
             tr.appendChild(td);
         }
         tr.innerHTML += editAndDel;
@@ -49,6 +54,7 @@
         price.value = trActual.cells[2].innerText;
         qtsStock.value = trActual.cells[3].innerText;
         obs.value = trActual.cells[4].innerText;
+        inputHidden.dataset.timestamp = trActual.cells[5].dataset.timestamp;
     }
 
     function sendDataForformDel() {
@@ -79,36 +85,37 @@
         table.setAttribute('class', 'table table-striped table-hover');
         // requisitando do servidor
         axios.get(urlBase)
-            .then((response) => {
-                response.data.forEach(objProd => {
-                    treatDataOfReq(objProd);
-                    tbody.appendChild(createLine(objProd));
-                });
-                table.appendChild(createHeadTable(response.data[0]));
-                table.appendChild(tbody);
-                docFrag.appendChild(table);
-                injectTable(docFrag);
-                console.log(docFrag);
-            })
-            .catch(function (error) {
-                // manipula erros da requisição
-                console.error(error);
+        .then((response) => {
+            response.data.forEach(objProd => {
+                tbody.appendChild(createLine(new Produto(objProd)));
             });
+            table.appendChild(createHeadTable(new Produto(response.data[0])));
+            table.appendChild(tbody);
+            docFrag.appendChild(table);
+            injectTable(docFrag);
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+    }
+
+    /**
+     * Function construtora para evitar bug na hora do editar 
+     * Após o envio do update na hora de requisar esses dados trás eles desordenado. 
+     */
+    function Produto(obj) {
+        obj = obj || {};
+        this.id = obj.id;
+        this.nome = obj.nome;
+        this.valor = obj.valor;
+        this.quantidadeEstoque = obj.quantidadeEstoque;
+        this.observacao = obj.observacao;
+        this.dataCadastro = obj.dataCadastro;
     }
 
     function injectTable(docFrag) {
         const divToInject = document.querySelector('[data-js="injectTable"]');
         divToInject.replaceChildren(docFrag);
-    }
-
-    // tratar dadso do request
-    function treatDataOfReq(objProd) {
-        for(let prop in objProd) {
-            // tratamentar \/
-            if(prop === 'dataCadastro'){
-                objProd[prop] = (new Date(objProd[prop])).toLocaleDateString();
-            }
-        }
     }
 
     function cadProduct(evt) {
@@ -128,19 +135,18 @@
         };
 
         axios.post(urlBase, newProduct)
-            .then((response) => { 
-                createTable();
-                name.value = '';
-                price.value = '';
-                qtsStock.value = '';
-                obs.value = '';
-                document.querySelector('[data-js="closeWinCad"]').click();
-                console.log(true);
-            })
-            .catch(function (error) {
-                // manipula erros da requisição
-                console.error(error);
-            }); 
+        .then((response) => { 
+            createTable();
+            name.value = '';
+            price.value = '';
+            qtsStock.value = '';
+            obs.value = '';
+            document.querySelector('[data-js="closeWinCad"]').click();
+            console.log(true);
+        })
+        .catch(function (error) {
+            console.error(error);
+        }); 
     }
 
     function EditProduct(evt) {
@@ -154,27 +160,25 @@
         var url = urlBase + '/' + inputHidden.value;
 
         var productEdited = {
-            id: inputHidden.value,
             nome: name.value,
             quantidadeEstoque: qtsStock.value,
             valor: price.value,
-            dataCadastro: new Date().toISOString(),
-            observacao: obs.value
+            observacao: obs.value,
+            dataCadastro: inputHidden.dataset.timestamp
         };
         axios.put(url, productEdited)
-            .then((response) => {
-                createTable();
-                name.value = '';
-                price.value = '';
-                qtsStock.value = '';
-                obs.value = '';
-                document.querySelector('[data-js="closeWinEdit"]').click();
-                console.log(response.data);
+        .then((response) => {
+            createTable();
+            name.value = '';
+            price.value = '';
+            qtsStock.value = '';
+            obs.value = '';
+            document.querySelector('[data-js="closeWinEdit"]').click();
 
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
     }
 
     function DelProduct(evt) {
@@ -183,13 +187,12 @@
         var inputHidden = formDelProduct.querySelector('[data-js="idDel"]');
         var url = urlBase + '/' + inputHidden.value;
         axios.delete(url)
-            .then((response) => {
-                createTable();
-                document.querySelector('[data-js="closeWinDel"]').click();
-            })
-            .catch(function (error) {
-                // manipula erros da requisição
-                console.error(error);
-            });
+        .then((response) => {
+            createTable();
+            document.querySelector('[data-js="closeWinDel"]').click();
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
     }
 })();
