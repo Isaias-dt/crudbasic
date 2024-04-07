@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Produto</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../assets/style/libs/boodstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="./assets/style/css/crud.css">
+	<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script defer type="module" src="./src/main.js"></script>
+
+</head>
+<body>
+<div class="container-xl">
+	<div class="table-responsive">
+		<div class="table-wrapper">
+			<div class="table-title bg-primary">
+				<div class="row">
+					<div class="col-sm-6">
+						<h2>Gerenciar <b>Produto</b></h2>
+					</div>
+					<div class="col-sm-6">
+						<a href="#addProductModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Novo Produto</span></a>
+					</div>
+				</div>
+			</div>
+			<!-- inject table -->
+			<div data-js="injectTable"></div>
+		</div>
+	</div>        
+</div>
+<!-- Register Modal HTML -->
+<div id="addProductModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form data-js="formCadProduct">
+				<div class="modal-header">						
+					<h4 class="modal-title">Cadastrar Produto</h4>
+					<button type="button" class="close" data-js="closeWinCad" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Nome</label>
+						<input type="text" class="form-control" required data-js="name">
+					</div>
+					<div class="form-group">
+						<label>Valor</label>
+						<input type="text" class="form-control" required data-js="price">
+					</div>
+					<div class="form-group">
+						<label>Quantidade em Estoque</label>
+						<input type="number" class="form-control" required data-js="qtsStock">
+					</div>
+					<div class="form-group">
+						<label>Observação</label>
+						<textarea type="tel" class="form-control" required data-js="obs"></textarea>
+					</div>
+					<input type="hidden" data-js="idPost">			
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="submit" class="btn btn-success" value="Cadastrar" data-js="btnCadProducte">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Edit Modal HTML -->
+<div id="editProductModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form data-js="formEditProduct">
+				<div class="modal-header">						
+					<h4 class="modal-title">Editar Produto</h4>
+					<button type="button" class="close" data-js="closeWinEdit" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Nome</label>
+						<input type="text" class="form-control" required data-js="name">
+					</div>
+					<div class="form-group">
+						<label>Valor</label>
+						<input type="text" class="form-control" required data-js="price">
+					</div>
+					<div class="form-group">
+						<label>Quantidade em Estoque</label>
+						<input type="number" class="form-control" required data-js="qtsStock">
+					</div>
+					<div class="form-group">
+						<label>Observação</label>
+						<textarea type="tel" class="form-control" required data-js="obs"></textarea>
+					</div>			
+					<input type="hidden" data-js="idPut">	
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="submit" class="btn btn-info" value="Salvar">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Delete Modal HTML -->
+<div id="deleteProductModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form data-js="formDelProduct">
+				<div class="modal-header">						
+					<h4 class="modal-title">Deletar Produto</h4>
+					<button type="button" class="close" data-js="closeWinDel" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<p>Tem certeza de que deseja excluir esses registros?</p>
+					<p class="text-warning"><small>Essa ação não pode ser desfeita.</small></p>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="submit" class="btn btn-danger" value="Deletar">
+					<input type="hidden" data-js="idDel">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>
